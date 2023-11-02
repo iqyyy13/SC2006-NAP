@@ -1,1 +1,1 @@
-module.exports = { BASE_URL: 'https://1b01-42-60-100-8.ngrok.io' }
+module.exports = { BASE_URL: 'https://37fc-42-60-100-8.ngrok.io' }

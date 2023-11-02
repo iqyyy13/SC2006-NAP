@@ -5,7 +5,7 @@ const { Carpark } = require('./carpark')
 const CarparkLot = db.define("CarparkLot", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     accountId: DataTypes.STRING,
-    carparkId: DataTypes.INTEGER,
+    carparkId: DataTypes.STRING,
     carparkLot: DataTypes.STRING,
     remarks: DataTypes.STRING
 }, {tableName: "carpark_lot"})

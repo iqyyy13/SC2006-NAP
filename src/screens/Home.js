@@ -136,12 +136,12 @@ const Home = () => {
         const govsgdata = govsgresponse.data.items[0].carpark_data;
         setCarparkData2(govsgdata);
 
-        /*console.log(`${BASE_URL}/carpark/retrieve`)
+        console.log(`${BASE_URL}/carpark/retrieve`)
         const testAPI = await axios.get(`${BASE_URL}/carpark/retrieve` , {
           headers: {}
         })
         
-        console.log(testAPI)*/
+        console.log(testAPI)
         
   
 
@@ -348,7 +348,7 @@ const Home = () => {
 
       <Animated.View style = {[styles.TouchableOpacity, { bottom : icon_1, opacity: pop ? 1 : 0},]}>
         <TouchableOpacity
-          onPress = {() => navigation.navigate('ForgotPassword')}
+          onPress = {() => navigation.navigate('CarparkLot')}
         >
           <Icon1 
             name = "save" size = {25} color = '#FFFF'     
@@ -357,7 +357,7 @@ const Home = () => {
       </Animated.View>
       <Animated.View style = {[styles.TouchableOpacity, { bottom : icon_2, right: icon_2, opacity: pop ? 1 : 0},]}>
         <TouchableOpacity
-          onPress = {() => navigation.navigate('ForgotPassword')}
+          onPress = {() => navigation.navigate('Login')}
         >
           <Icon1 
             name = "save-1" size = {25} color = '#FFFF' 

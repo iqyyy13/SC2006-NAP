@@ -22,7 +22,7 @@ const save = async (carparkId, carparkLot, remarks, req) => {
     // Check carpark lot
     if (!carparkLot) throw new ValidationError("Carpark lot cannot be blank")
     // Check if carpark doesnt exist - shouldnt happen tho
-    const carpark = await Carpark.findOne({ where: { id: carparkId } })
+    const carpark = await Carpark.findOne({ where: { carparkNo: carparkId } })
     if (!carpark) throw new CarparkNotFoundError("Carpark does not exist")
 
     // Check for existing saved lot - 1 account 1 lot
