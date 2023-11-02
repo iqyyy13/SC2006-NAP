@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, TouchableWithoutFeedback, TouchableOpacity, Image, Animated } from 'react-native';
 import MapView, {Marker, Circle } from 'react-native-maps';
 import axios from 'axios';
 import proj4 from 'proj4';
 import data from '../../assets/hdb_carpark.json';
 import { useNavigation } from "@react-navigation/native";
 import imageicon from '../../assets/adaptive-icon.png'
+import Icon from "react-native-vector-icons/FontAwesome";
+import Icon1 from "react-native-vector-icons/Fontisto";
+
 
 //import Geolocation from '@react-native-community/geolocation';
 
@@ -49,6 +52,50 @@ const Home = () => {
     longitude: 1.3303110584045954, 
     latitude: 103.85885005071715,
   });
+
+  const [icon_1] = useState(new Animated.Value(40));
+  const [icon_2] = useState(new Animated.Value(40));
+  const [icon_3] = useState(new Animated.Value(40));
+
+  const [pop, setPop] = useState(false);
+
+  const popIn = () => {
+    setPop(true);
+    Animated.timing(icon_1, {
+      toValue: 130,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(icon_2, {
+      toValue: 130,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(icon_3, {
+      toValue: 130,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  }
+  
+  const popOut = () => {
+    setPop(false);
+    Animated.timing(icon_1, {
+      toValue: 40,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(icon_2, {
+      toValue: 40,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(icon_3, {
+      toValue: 40,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  }
 
   const handleMarkerDrag = (e) => {
     // Update the region based on the marker's new position
@@ -252,10 +299,12 @@ const Home = () => {
     // You can now use the coordinates array to update your map view or perform any other actions as needed.
     // For example, if you want to center the map on the first result, you can do something like this:
   
-    if (coordinates.length > 0) {
+    if (coordinates.length > 0) 
+    {
       const firstCoordinate = coordinates[0];
       console.log(firstCoordinate.y_coor,firstCoordinate.x_coor)
-      const newRegion = {
+      const newRegion = 
+      {
         latitude: firstCoordinate.x_coor,
         longitude: firstCoordinate.y_coor,
         latitudeDelta: 0.1, // Adjust these values as needed
@@ -266,18 +315,22 @@ const Home = () => {
       const markerIndex = markers.findIndex(marker => marker.key === String(firstCoordinate.car_park_no));
       console.log(markerIndex)
 
-      if (markerIndex !== -1) {
+      if (markerIndex !== -1) 
+      {
         console.log("changing color")
         // Update the color of the found marker to green
         setSearchMarkerColor('#0F0F0F')
         console.log(newRegion)
         setSearchMarker(newRegion)
-        
       }
-
     }
 
   };
+
+  const clickHandler = () => {
+    console.warn("Button pressed")
+  }
+
   return (
     
     <View style={styles.container}>
@@ -291,7 +344,45 @@ const Home = () => {
           title="Search"
           onPress={handleSearchButtonPress}
           
-        />
+      />
+
+      <Animated.View style = {[styles.TouchableOpacity, { bottom : icon_1, opacity: pop ? 1 : 0},]}>
+        <TouchableOpacity
+          onPress = {() => navigation.navigate('ForgotPassword')}
+        >
+          <Icon1 
+            name = "save" size = {25} color = '#FFFF'     
+          />
+        </TouchableOpacity>
+      </Animated.View>
+      <Animated.View style = {[styles.TouchableOpacity, { bottom : icon_2, right: icon_2, opacity: pop ? 1 : 0},]}>
+        <TouchableOpacity
+          onPress = {() => navigation.navigate('ForgotPassword')}
+        >
+          <Icon1 
+            name = "save-1" size = {25} color = '#FFFF' 
+          />
+        </TouchableOpacity>
+      </Animated.View>
+      <Animated.View style = {[styles.TouchableOpacity, { right : icon_3, opacity: pop ? 1 : 0},]}>
+        <TouchableOpacity
+          onPress = {() => navigation.navigate('ForgotPassword')}
+        >
+          <Icon 
+            name = "street-view" size = {25} color = '#FFFF' 
+          />
+        </TouchableOpacity>
+      </Animated.View>
+      <TouchableOpacity
+        style = {styles.TouchableOpacity}
+        zIndex = {2}
+        onPress = {() => {
+          clickHandler();
+          pop === false ? popIn() : popOut();
+        }}
+      >
+        <Icon name = "plus" size = {25} color = '#FFFF' />
+      </TouchableOpacity>      
 
       {carparkData.length > 0 ? (
         <MapView style={styles.map} region={region}>
@@ -315,6 +406,7 @@ const Home = () => {
             center = {draggableMarkerCoord}
             radius = {1000}
           />
+
           {markers}
             
         </MapView>
@@ -332,6 +424,7 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+    zIndex: -1
   },
   searchBar: {
     width: '100%', // Adjust the width to your preference (e.g., 80% of the screen width)
@@ -340,7 +433,26 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     paddingLeft: 10,
     paddingTop: 10,
+  },
+
+  TouchableOpacity: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 40,
+    backgroundColor: 'red',
+    borderRadius: 50,
+  },
+
+  floatingButton: {
+    resizeMode: 'contain',
+    width: 50,
+    height: 50,
   }
 });
+
 
 export default Home;

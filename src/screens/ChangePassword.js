@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert, useWindowDimensions} from "react-native";
 import Logo from '../../assets/naplogo.png';
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const ChangePassword = () =>{
   const navigation = useNavigation();
@@ -9,11 +10,21 @@ const ChangePassword = () =>{
   const [code, setCode] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
+  const { BASE_URL } = require('../../server/config.js')
 
   const onConfirmPressed = () => {
     console.warn("Confirm Pressed");
 
-    navigation.navigate("Login");
+    axios.post(`${BASE_URL}/auth/verifyPasswordRequestAndUpdate`, {
+      verificationCode : code
+    })
+    .then(function (response) {
+      console.log(response)
+      navigation.navigate("Login");
+    })
+    .catch(function (error) {
+      console.log(error);
+    });    
   }
 
   const onBackPressed = () => {

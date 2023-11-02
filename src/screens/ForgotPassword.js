@@ -2,16 +2,30 @@ import React, { useState } from "react";
 import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert, useWindowDimensions} from "react-native";
 import Logo from '../../assets/naplogo.png';
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const ForgotPassword = () =>{
   const navigation = useNavigation();
   const {height} = useWindowDimensions();
   const [email, setEmail] = useState('');
+  const { BASE_URL } = require('../../server/config.js')
 
+  
   const onSendPressed = () => {
     console.warn("Send Pressed");
-    
-    navigation.navigate('ChangePassword');
+
+    axios.post(`${BASE_URL}/auth/sendEmail`, {
+      username: email,
+      email: email,
+      newPassword: null
+    })
+    .then(function (response) {
+      console.log(response)
+      navigation.navigate('ChangePassword');
+    })
+    .catch(function (error) {
+      console.log(error);
+    });    
   }
 
   const onBackPressed = () => {

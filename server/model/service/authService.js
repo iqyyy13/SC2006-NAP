@@ -29,9 +29,10 @@ const sendEmail = async (email, verificationCode) => {
 }
 
 function generateRandomVerificationCode() {
-    const min = 100000; // Smallest 6-digit number
+    /*const min = 100000; // Smallest 6-digit number
     const max = 999999; // Largest 6-digit number
-    return Math.floor(Math.random() * (max-min+1)) + min;
+    return Math.floor(Math.random() * (max-min+1)) + min;*/
+    return "000000";
 }
 
 const validateSignupInput = (username, password, email) => {
