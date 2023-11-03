@@ -13,6 +13,8 @@ import CarparkLot from "../screens/CarparkLot";
 import SaveCL from "../screens/SaveCL";
 import ViewSavedCL from "../screens/ViewSavedCL";
 import CarparkSave from "../screens/CarparkSave";
+import CarparkUI from "../screens/CarparkUI";
+import ViewSavedCarpark from "../screens/ViewSavedCarpark";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +31,9 @@ const Navigation = () => {
                 <Stack.Screen name = "SaveCL" component={SaveCL}/>
                 <Stack.Screen name = "ViewSavedCL" component={ViewSavedCL}/>
                 <Stack.Screen name = "CarparkSave" component={CarparkSave}/>
+                <Stack.Screen name = "CarparkUI" component={CarparkUI}/>
+                <Stack.Screen name = "ViewSavedCarpark" component={ViewSavedCarpark}/>
+
             </Stack.Navigator>
             <Text> Navigation </Text>
         </NavigationContainer>

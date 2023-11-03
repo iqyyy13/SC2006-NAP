@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableWithoutFeedback, TouchableOpacity, Image, Animated } from 'react-native';
-import MapView, {Marker, Circle } from 'react-native-maps';
+import { View, Text, StyleSheet, TextInput, Button, TouchableWithoutFeedback, TouchableOpacity, Image, Animated, Modal } from 'react-native';
+import MapView, {Marker, Circle, Callout } from 'react-native-maps';
 import axios from 'axios';
 import proj4 from 'proj4';
 import data from '../../assets/hdb_carpark.json';
@@ -26,10 +26,23 @@ const URA_API_URL = 'https://www.ura.gov.sg/uraDataService/insertNewToken.action
 const govsgurl = 'https://api.data.gov.sg/v1/transport/carpark-availability';
 const accessKey = '098ecd87-27d6-414e-adc6-e8e7f3e65207'; // Use the provided access key
 const { BASE_URL } = require('../../server/config.js')
-const markers = [];
 const Home = () => {
   
+  const[showSaveButton, setShowSaveButton] = useState(false);
+  const[selectedMarker, setSelectedMarker] = useState(null);
+  const[searchedMarkerCarParkNo, setSearchedMarkedCarParkNo] = useState(null);
 
+  const handleMarkerPress = (carpark) => {
+    setSelectedMarker(carpark);
+    setShowSaveButton(true);
+  };
+
+  const handleSaveMarker = () => {
+    if(selectedMarker) {
+
+      Alert.alert('Marker Saved');
+    }
+  };
 
   const [position, setPosition] = useState({
     latitude: 10,
@@ -37,6 +50,7 @@ const Home = () => {
     latitudeDelta: 0.001,
     longitudeDelta: 0.001,
   });
+
   const navigation = useNavigation();
   const [markers, setMarkers] = useState([]);
   const [carparkData, setCarparkData] = useState([]);
@@ -210,7 +224,6 @@ const Home = () => {
 
 
   for (let i = 0; i < carparkData.length; i++) {
-    
     const carpark = carparkData[i];
     for (let j = 0; j < carpark.geometries.length; j++) {
       const geometry = carpark.geometries[j];
@@ -230,22 +243,16 @@ const Home = () => {
           key={carpark.carparkNo}
           coordinate={{
             latitude : floatlat,
-            longitude : floatlong,}}
-      
+            longitude : floatlong,
+          }}
             title={carpark.carparkNo}
             description={carpark.lotsAvailable}
-            
-          
-
-        />
-      );
-  
-} 
-      
-    }
-  }
-
-
+            onPress={() => handleMarkerPress(carpark)}
+        ></Marker>
+       );
+      };
+    };
+  };
 
   function searchAddressInJSON(address) {
     try {
@@ -302,7 +309,10 @@ const Home = () => {
     if (coordinates.length > 0) 
     {
       const firstCoordinate = coordinates[0];
+      const carParkNo = firstCoordinate.car_park_no;
+      setSearchedMarkedCarParkNo(carParkNo);
       console.log(firstCoordinate.y_coor,firstCoordinate.x_coor)
+
       const newRegion = 
       {
         latitude: firstCoordinate.x_coor,
@@ -319,7 +329,7 @@ const Home = () => {
       {
         console.log("changing color")
         // Update the color of the found marker to green
-        setSearchMarkerColor('#0F0F0F')
+        setSearchMarkerColor('#03030F')
         console.log(newRegion)
         setSearchMarker(newRegion)
       }
@@ -339,11 +349,11 @@ const Home = () => {
         placeholder="Search for a location..."
         value={searchText}
         onChangeText={handleSearchTextChange}
+        backgroundColor = "#FFFFFF"
       />
       <Button
           title="Search"
-          onPress={handleSearchButtonPress}
-          
+          onPress={handleSearchButtonPress}  
       />
 
       <Animated.View style = {[styles.TouchableOpacity, { bottom : icon_1, opacity: pop ? 1 : 0},]}>
@@ -357,7 +367,7 @@ const Home = () => {
       </Animated.View>
       <Animated.View style = {[styles.TouchableOpacity, { bottom : icon_2, right: icon_2, opacity: pop ? 1 : 0},]}>
         <TouchableOpacity
-          onPress = {() => navigation.navigate('CarparkSave')}
+          onPress = {() => navigation.navigate('CarparkUI')}
         >
           <Icon1 
             name = "save-1" size = {25} color = '#FFFF' 
@@ -385,31 +395,63 @@ const Home = () => {
       </TouchableOpacity>      
 
       {carparkData.length > 0 ? (
-        <MapView style={styles.map} region={region}>
-          <Marker
-            //image={markericon}
-            //style = {{ width: 5, height: 5 }}
-            pinColor= {searchMarkerColor}
-            coordinate={searchMarker}
-            zIndex={1}
-            
+        <View style = {styles.mapContainer}>
+          <MapView style={styles.map} region={region}>
+            <Marker
+              //image={markericon}
+              //style = {{ width: 5, height: 5 }}
+              pinColor = {searchMarkerColor}
+              coordinate = {searchMarker}
+              zIndex={2}            
+            >
+              <Callout>
+                <Text> Do you want to save this marker? </Text>
+                <Text> Car Park No: {searchedMarkerCarParkNo} </Text>
+                <View style = {styles.calloutButtonsContainer}>
+                  <TouchableOpacity 
+                    onPress={() => handleSaveMarker(carpark)} 
+                    style={{
+                      ...styles.calloutButton, 
+                      zIndex: 3,
+                      backgroundColor: 'blue',
+                      padding: 10,
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Text style = {{color : 'white'}}>Save</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    onPress={() => setShowSaveButton(false)} 
+                    style={{
+                      ...styles.calloutButton, 
+                      zIndex: 3,
+                      backgroundColor: 'black',
+                      padding: 10,
+                      borderRadius: 5,
+                      }}
+                    >
+                    <Text style = {{color : 'white'}}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </Callout>
+            </Marker>
 
-          ></Marker>
-          <Marker
-            draggable
-            pinColor='#0000ff'
-            coordinate={region}
-            onDragEnd={handleMarkerDrag}
+            <Marker
+              draggable
+              pinColor='#0000ff'
+              coordinate={region}
+              onDragEnd={handleMarkerDrag}
+            ></Marker>
 
-          ></Marker>
-          <Circle
-            center = {draggableMarkerCoord}
-            radius = {1000}
-          />
+            <Circle
+              center = {draggableMarkerCoord}
+              radius = {1000}
+            />
 
-          {markers}
-            
-        </MapView>
+            {markers}
+      
+          </MapView>
+        </View>
       ) : (
         <Text>Loading carpark data...</Text>
       )}
@@ -424,7 +466,7 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
-    zIndex: -1
+    zIndex: -2
   },
   searchBar: {
     width: '100%', // Adjust the width to your preference (e.g., 80% of the screen width)
@@ -442,7 +484,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     right: 30,
-    bottom: 40,
+    bottom: 50,
     backgroundColor: 'red',
     borderRadius: 50,
   },
@@ -450,8 +492,27 @@ const styles = StyleSheet.create({
   floatingButton: {
     resizeMode: 'contain',
     width: 50,
-    height: 50,
-  }
+    height: 40,
+  },
+
+  calloutButton: {
+    backgroundColor: '#FFFFFF', // Change the color to your preference
+    padding: 10,
+    marginTop: 5,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+
+  mapContainer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -3,
+  },
+
+  calloutButtonsContainer: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+
 });
 
 

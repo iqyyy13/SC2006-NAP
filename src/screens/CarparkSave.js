@@ -28,7 +28,7 @@ const CarparkSave = () =>{
   const onBackPressed = () => {
     console.warn("Ok");
 
-    navigation.navigate('Home');
+    navigation.navigate('CarparkUI');
   }
   
   return (
