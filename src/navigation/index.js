@@ -8,11 +8,11 @@ import Registration from "../screens/Registration";
 import Home from "../screens/Home";
 import ForgotPassword from "../screens/ForgotPassword";
 import ChangePassword from "../screens/ChangePassword";
-//import SavedCarpark from "../screens/SavedCarpark";
 import CarparkLot from "../screens/CarparkLot";
 //import ViewCarparkList from "../screens/ViewCarparkList";
 import SaveCL from "../screens/SaveCL";
 import ViewSavedCL from "../screens/ViewSavedCL";
+import CarparkSave from "../screens/CarparkSave";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +28,7 @@ const Navigation = () => {
                 <Stack.Screen name = "CarparkLot" component={CarparkLot}/>
                 <Stack.Screen name = "SaveCL" component={SaveCL}/>
                 <Stack.Screen name = "ViewSavedCL" component={ViewSavedCL}/>
+                <Stack.Screen name = "CarparkSave" component={CarparkSave}/>
             </Stack.Navigator>
             <Text> Navigation </Text>
         </NavigationContainer>

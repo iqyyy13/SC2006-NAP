@@ -6,7 +6,7 @@ const { Carpark } = require('./carpark')
 const SavedCarpark = db.define("SavedCarpark", {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     accountId: { type: DataTypes.INTEGER },
-    carparkId: { type: DataTypes.INTEGER }
+    carparkId: { type: DataTypes.STRING }
 }, {tableName: "saved_carpark"})
 
 SavedCarpark.belongsTo(Account, { foreignKey: 'accountId' });

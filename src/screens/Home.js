@@ -357,7 +357,7 @@ const Home = () => {
       </Animated.View>
       <Animated.View style = {[styles.TouchableOpacity, { bottom : icon_2, right: icon_2, opacity: pop ? 1 : 0},]}>
         <TouchableOpacity
-          onPress = {() => navigation.navigate('Login')}
+          onPress = {() => navigation.navigate('CarparkSave')}
         >
           <Icon1 
             name = "save-1" size = {25} color = '#FFFF' 
