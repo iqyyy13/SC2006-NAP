@@ -14,6 +14,7 @@ const CarparkLot = () =>{
 
   const onViewPressed = () => {
     console.warn("View Saved Carpark Lots");
+    navigation.navigate("ViewSavedCL")
   }
   
   return (

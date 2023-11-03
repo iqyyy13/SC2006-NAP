@@ -12,6 +12,7 @@ import ChangePassword from "../screens/ChangePassword";
 import CarparkLot from "../screens/CarparkLot";
 //import ViewCarparkList from "../screens/ViewCarparkList";
 import SaveCL from "../screens/SaveCL";
+import ViewSavedCL from "../screens/ViewSavedCL";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const Navigation = () => {
                 <Stack.Screen name = "ChangePassword" component={ChangePassword}/>
                 <Stack.Screen name = "CarparkLot" component={CarparkLot}/>
                 <Stack.Screen name = "SaveCL" component={SaveCL}/>
+                <Stack.Screen name = "ViewSavedCL" component={ViewSavedCL}/>
             </Stack.Navigator>
             <Text> Navigation </Text>
         </NavigationContainer>
