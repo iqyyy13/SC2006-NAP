@@ -60,7 +60,7 @@ const remove = async(carparkId, req) => {
     if (!accountId) throw new SessionTimeoutError()
 
     // check if carpark exists - shouldn't be a problem though
-    const carpark = await Carpark.findOne({ where: { id: carparkId } })
+    const carpark = await Carpark.findOne({ where: { carparkNo: carparkId } })
     if (!carpark) throw new CarparkNotFoundError("Carpark does not exist")
 
     const savedCarpark = await SavedCarpark.findOne({ where: { accountId, carparkId } })

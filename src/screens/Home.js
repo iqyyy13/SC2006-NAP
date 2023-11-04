@@ -256,24 +256,33 @@ const Home = () => {
 
   function searchAddressInJSON(address) {
     try {
-      // Read the JSON data from the file.
+     
       console.log(address);
-  
-      // Filter the data based on the "address" field.
+      const foundMarker = markers.find((marker) => marker.key === address);
+      console.log('found marker:',foundMarker);
+      if (foundMarker){
+      
+      console.log('Found marker coordinates:', foundMarker.props.coordinate);
+      return foundMarker
+      }
+      else{
+        console.log('Marker not found');
+        
+      }
       const filteredData = data.filter((carpark) =>
         carpark.address.toLowerCase().includes(address.toLowerCase()) ||
         carpark.car_park_no.toLowerCase().includes(address.toLowerCase())
 
       );
   
-      // Extract "x_coord" and "y_coord" values from the filtered data.
+      //Extract "x_coord" and "y_coord" values from the filtered data.
       const coords = filteredData.map((carpark) => ({
         x_coor: carpark.x_coor,
         y_coor: carpark.y_coor,
         car_park_no: carpark.car_park_no
-      }));
+     }));
   
-      console.log(filteredData);
+    //  console.log('filtered data:',filteredData);
 
       return coords;
     } catch (error) {
@@ -302,28 +311,79 @@ const Home = () => {
 
   const handleSearchButtonPress = () => {
     const coordinates = searchAddressInJSON(searchText);
+    if (coordinates == undefined){
+      return null;
+    }
+    console.log(coordinates.coordinate);
 
+    console.log('received coordinates: ', coordinates,'length:',coordinates.length);
+    var firstCoordinate = 0;
+    
+    if(coordinates.length == undefined){
+      console.log(coordinates.props.coordinate.latitude,coordinates.props.coordinate.longitude)
+
+      const newRegion2 = {
+        latitude: coordinates.props.coordinate.latitude,
+        longitude: coordinates.props.coordinate.longitude,
+        latitudeDelta: 0.1, // Adjust these values as needed
+        longitudeDelta: 0.1,
+      };
+      console.log('new region set')
+      setSearchMarker(newRegion2)
+    }
+    else{
+      console.log('marker not found')
+    }
+        
     // You can now use the coordinates array to update your map view or perform any other actions as needed.
     // For example, if you want to center the map on the first result, you can do something like this:
   
-    if (coordinates.length > 0) 
-    {
-      const firstCoordinate = coordinates[0];
-      const carParkNo = firstCoordinate.car_park_no;
-      setSearchedMarkedCarParkNo(carParkNo);
-      console.log(firstCoordinate.y_coor,firstCoordinate.x_coor)
+    if (coordinates.length > 0) {
+      var length = 0;
 
-      const newRegion = 
-      {
-        latitude: firstCoordinate.x_coor,
-        longitude: firstCoordinate.y_coor,
+
+      do{
+
+        firstCoordinate = coordinates[length];
+
+        var markerIndex = markers.findIndex(marker => marker.key === String(firstCoordinate.car_park_no));
+
+        length++;
+
+
+        console.log('first marker not found, next', markerIndex)
+
+      } while(markerIndex == -1);
+
+      console.log(markerIndex)
+
+    }
+    else{
+      console.log("else");
+      firstCoordinate = coordinates;
+    }
+    var x,y;
+      console.log(firstCoordinate.y_coor,firstCoordinate.x_coor)
+      console.log(firstCoordinate.latitude,firstCoordinate.longitude)
+      if(firstCoordinate.y_coor == undefined){
+        y = firstCoordinate.latitude;
+        x = firstCoordinate.longitude;
+      }
+      else{
+        y = firstCoordinate.y_coor;
+        x = firstCoordinate.x_coor;
+      }
+
+      const newRegion = {
+        latitude: x,
+        longitude: y,
         latitudeDelta: 0.1, // Adjust these values as needed
         longitudeDelta: 0.1,
       };
       
-      console.log(firstCoordinate.car_park_no)
-      const markerIndex = markers.findIndex(marker => marker.key === String(firstCoordinate.car_park_no));
-      console.log(markerIndex)
+
+
+      console.log(firstCoordinate.car_park_no,x,y)
 
       if (markerIndex !== -1) 
       {
@@ -333,9 +393,7 @@ const Home = () => {
         console.log(newRegion)
         setSearchMarker(newRegion)
       }
-    }
-
-  };
+    };
 
   const clickHandler = () => {
     console.warn("Button pressed")
@@ -400,7 +458,7 @@ const Home = () => {
             <Marker
               //image={markericon}
               //style = {{ width: 5, height: 5 }}
-              pinColor = {searchMarkerColor}
+              pinColor = 'green'
               coordinate = {searchMarker}
               zIndex={2}            
             >
@@ -444,8 +502,10 @@ const Home = () => {
             ></Marker>
 
             <Circle
-              center = {draggableMarkerCoord}
+              center = {searchMarker}
               radius = {1000}
+              strokeColor='green'
+              strokeWidth={5}
             />
 
             {markers}

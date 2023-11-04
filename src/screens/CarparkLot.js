@@ -16,6 +16,12 @@ const CarparkLot = () =>{
     console.warn("View Saved Carpark Lots");
     navigation.navigate("ViewSavedCL")
   }
+
+  const onBackPressed = () => {
+    console.warn("Ok");
+
+    navigation.navigate('Home');
+  };
   
   return (
     <SafeAreaView style = {{ flex: 1, backgroundColor: '#e8ecf4'}}>
@@ -47,6 +53,14 @@ const CarparkLot = () =>{
               </View>
             </TouchableOpacity>
           </View>
+
+          <View style = {styles.forgetPassword}>
+            <TouchableOpacity onPress={onBackPressed}>
+              <View style = {styles.button2}>
+                <Text style = {styles.buttonText2}> Go Back </Text>
+              </View>
+            </TouchableOpacity>
+          </View>    
         </View>         
       </View>
     </SafeAreaView>
@@ -107,6 +121,25 @@ const styles = StyleSheet.create({
 
   forgetPassword:{
 
+  },
+
+  button2: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#1C1C1C',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: 24,
+  },
+
+  buttonText2:{
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1C1C1C',
   },
 });
 

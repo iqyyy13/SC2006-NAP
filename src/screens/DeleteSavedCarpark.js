@@ -1,26 +1,60 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert, useWindowDimensions, Switch} from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert} from "react-native";
 import Logo from '../../assets/naplogo.png';
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
-const CarparkUI = () =>{
+const DeleteSavedCarpark = () =>{
   const navigation = useNavigation();
+  const [carparkID, setcarparkID] = useState('');
+  const { BASE_URL } = require('../../server/config.js')
    
-  const onSavePressed = () => {
-    console.warn("Save Carpark"); 
-    navigation.navigate("CarparkSave")
-  }
+  const onConfirmPressed = () => {
+    console.warn("Confirm");
+    //showDeleteAlert();
+    confirmDeletion();
 
-  const onViewPressed = () => {
-    console.warn("View Saved Carpark");
-    navigation.navigate("ViewSavedCarpark")
+  };
+
+  const confirmDeletion = () => {
+    axios.post(`${BASE_URL}/carpark/remove`, {
+        carparkId : carparkID,
+    })
+    .then(function (response) {
+      console.log(response)
+      console.warn("Carpark Removed")
+      navigation.navigate('Home');
+    })
+    .catch(function (error) {
+      console.log(error);
+      console.warn("wrong input")
+    });    
   }
 
   const onBackPressed = () => {
     console.warn("Ok");
 
-    navigation.navigate('Home');
-  }
+    navigation.navigate('ViewSavedCarpark');
+  };
+
+  const showDeleteAlert = () => {
+    Alert.alert(
+      "Are you sure you want to delete this?",
+      [
+        {
+          text:'OK',
+          onPress: () => confirmDeletion(),
+        },
+        {
+            text: 'Cancel',
+            onPress: () => navigation.navigate('DeleteSavedCarpark'),
+        },
+      ],
+      {cancelable : false}
+    );
+  };
+
+
   
   return (
     <SafeAreaView style = {{ flex: 1, backgroundColor: '#e8ecf4'}}>
@@ -31,24 +65,28 @@ const CarparkUI = () =>{
             style = {styles.headerImg}
           />
         </View>
-                
-          <Text style = {styles.title} > Carpark </Text>
+
+        <Text style = {styles.title} > Delete Carpark </Text>
 
         <View style = {styles.form}>
-          <View style ={styles.formAction}>
-            <TouchableOpacity 
-              onPress={onSavePressed}>
-              <View style = {styles.button}>
-                <Text style = {styles.buttonText}>Save Carpark </Text>
-              </View>
-            </TouchableOpacity>
+          <View style = {styles.input}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType= 'email-address'
+              style = {styles.inputControl}
+              placeholder = 'Carpark ID'
+              placeholderTextColor = '#6b7280'
+              value = {carparkID}
+              onChangeText={newcarparkID => setcarparkID(newcarparkID)}
+            />
           </View>
 
-          <View style = {styles.forgetPassword}>
-            <TouchableOpacity
-              onPress={onViewPressed}>
+          <View style ={styles.formAction}>
+            <TouchableOpacity 
+              onPress={onConfirmPressed}>
               <View style = {styles.button}>
-                <Text style = {styles.buttonText}>View Saved Carpark </Text>
+                <Text style = {styles.buttonText}> Confirm </Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -89,6 +127,25 @@ const styles = StyleSheet.create({
     color: '#1e1e1e',
     marginBottom: 20,
     textAlign: 'center',
+  },
+
+  input:{
+    marginBottom: 20,
+  },
+
+  inputLabel: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#222',
+    marginBottom: 10
+  },
+  inputControl: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    fontWeight: '500',
+    color: '#222',
   },
    
   form: {
@@ -132,7 +189,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginTop: 24,
   },
 
   buttonText2:{
@@ -142,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarparkUI;
+export default DeleteSavedCarpark;

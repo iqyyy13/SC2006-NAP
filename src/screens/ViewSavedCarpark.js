@@ -8,8 +8,7 @@ const ViewSavedCarpark = () =>{
   const navigation = useNavigation();
   const [carparkID, setCarparkID] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const { BASE_URL } = require('../../server/config.js')
+  const { BASE_URL } = require('../../server/config.js');
 
   useEffect(() => {
     fetchCarparkLotData();
@@ -21,13 +20,13 @@ const ViewSavedCarpark = () =>{
         const data = response.data;
         const carparkIDArray = [];
 
-        console.log(response);
-        //console.log(data);
+        //console.log(response);
+        console.log(data);
         console.log(data[0]["carparkId"]);
 
-        for(index = 0; index < data.length; index++)
+        for(let index = 0; index < data.length; index++)
         {
-            carparkIDArray.push(data[index]["CarparkId"]);
+            carparkIDArray.push(data[index]["carparkId"]);
         }
 
         setCarparkID(carparkIDArray);
@@ -45,34 +44,17 @@ const ViewSavedCarpark = () =>{
   const onDeletePressed = () => {
     console.warn("Delete");
 
-    axios.post(`${BASE_URL}/carpark/remove`, {
-    })
-    .then(function (response) {
-      console.log(response)
-      showDeleteAlert();
-      //navigation.navigate('Home');
-    })
-    .catch(function (error) {
-      console.log(error);
-    });    
+    navigation.navigate('DeleteSavedCarpark');
   };
 
-  const showDeleteAlert = () => {
-    Alert.alert(
-      "Carpark Record Deleted",
-      "The record has been successfully deleted.",
-      [
-        {
-          text:"OK",
-          onPress: () => {
-            navigation.navigate('Home');
-          },
-        },
-      ],
-      {cancelable : false}
-    );
-  };
+  const onBackPressed = () => {
+    console.warn("Ok");
 
+    navigation.navigate('CarparkUI');
+  }
+
+  console.log(carparkID);
+  console.log(carparkID[0]);
 
     return (
         <SafeAreaView style = {{ flex: 1, backgroundColor: '#e8ecf4'}}>
@@ -88,8 +70,17 @@ const ViewSavedCarpark = () =>{
                   <ActivityIndicator size = "large" color = "#0000ff" />
                 ) : ( 
                 <>
-                    
- 
+                    <Text style = {styles.title}>Carpark ID: </Text>
+                    {
+                        carparkID.length ? (
+                        carparkID.map((item, index) => (
+                        <View key = {index}>
+                            <Text style = {{fontSize: 30, color: 'black'}} >{item} </Text>
+                        </View>
+                            ))
+                        ):(
+                            <Text style = {{fontSize: 30, color: 'black', paddingLeft: 40}}> No carpark ID available. </Text>
+                    )}
                 </>
               )}
 
@@ -98,6 +89,14 @@ const ViewSavedCarpark = () =>{
                   onPress={onDeletePressed}>
                   <View style = {styles.button}>
                     <Text style = {styles.buttonText}>Delete Saved Carpark? </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+              
+              <View style = {styles.forgetPassword}>
+                <TouchableOpacity onPress={onBackPressed}>
+                  <View style = {styles.button2}>
+                    <Text style = {styles.buttonText2}> Go Back </Text>
                   </View>
                 </TouchableOpacity>
               </View>              
@@ -170,6 +169,27 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 
+  forgetPassword:{
+
+  },
+
+  button2: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#1C1C1C',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+
+  buttonText2:{
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1C1C1C',
+  },
 
 });
 

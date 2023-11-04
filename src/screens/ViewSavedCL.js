@@ -68,6 +68,12 @@ const ViewSavedCL = () =>{
     );
   };
 
+  const onBackPressed = () => {
+    console.warn("Ok");
+
+    navigation.navigate('CarparkLot');
+  };
+
 
     return (
         <SafeAreaView style = {{ flex: 1, backgroundColor: '#e8ecf4'}}>
@@ -90,7 +96,7 @@ const ViewSavedCL = () =>{
                   <Text style = {styles.label}>Carpark Lot : </Text>
                   <Text style = {styles.value}>{carparkLot} </Text>
 
-                  <Text style = {styles.label}>Carpark ID : </Text>
+                  <Text style = {styles.label}>Remarks : </Text>
                   <Text style = {styles.value}>{remarks} </Text>
                 </>
               )}
@@ -102,7 +108,16 @@ const ViewSavedCL = () =>{
                     <Text style = {styles.buttonText}>Delete Saved Carpark Lot? </Text>
                   </View>
                 </TouchableOpacity>
-              </View>              
+              </View>
+
+              <View style = {styles.forgetPassword}>
+                <TouchableOpacity onPress={onBackPressed}>
+                  <View style = {styles.button2}>
+                    <Text style = {styles.buttonText2}> Go Back </Text>
+                  </View>
+                </TouchableOpacity>
+              </View>     
+
             </View>
         </SafeAreaView>
     );
@@ -170,6 +185,28 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#fff',
+  },
+
+  forgetPassword:{
+
+  },
+
+  button2: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#1C1C1C',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+
+  buttonText2:{
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1C1C1C',
   },
 
 

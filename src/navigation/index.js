@@ -15,6 +15,7 @@ import ViewSavedCL from "../screens/ViewSavedCL";
 import CarparkSave from "../screens/CarparkSave";
 import CarparkUI from "../screens/CarparkUI";
 import ViewSavedCarpark from "../screens/ViewSavedCarpark";
+import DeleteSavedCarpark from "../screens/DeleteSavedCarpark";
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ const Navigation = () => {
                 <Stack.Screen name = "CarparkSave" component={CarparkSave}/>
                 <Stack.Screen name = "CarparkUI" component={CarparkUI}/>
                 <Stack.Screen name = "ViewSavedCarpark" component={ViewSavedCarpark}/>
+                <Stack.Screen name = "DeleteSavedCarpark" component={DeleteSavedCarpark}/>
 
             </Stack.Navigator>
             <Text> Navigation </Text>
