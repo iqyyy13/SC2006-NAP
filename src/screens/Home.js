@@ -247,7 +247,7 @@ const Home = () => {
           }}
             title={carpark.carparkNo}
             description={carpark.lotsAvailable}
-            onPress={() => handleMarkerPress(carpark)}
+            //onPress={() => handleMarkerPress(carpark)}
         ></Marker>
        );
       };
@@ -272,7 +272,6 @@ const Home = () => {
       const filteredData = data.filter((carpark) =>
         carpark.address.toLowerCase().includes(address.toLowerCase()) ||
         carpark.car_park_no.toLowerCase().includes(address.toLowerCase())
-
       );
   
       //Extract "x_coord" and "y_coord" values from the filtered data.
@@ -325,11 +324,12 @@ const Home = () => {
       const newRegion2 = {
         latitude: coordinates.props.coordinate.latitude,
         longitude: coordinates.props.coordinate.longitude,
-        latitudeDelta: 0.1, // Adjust these values as needed
-        longitudeDelta: 0.1,
+        latitudeDelta: 0.02, // Adjust these values as needed
+        longitudeDelta: 0.02,
       };
       console.log('new region set')
       setSearchMarker(newRegion2)
+      setRegion(newRegion2)
     }
     else{
       console.log('marker not found')
@@ -341,16 +341,10 @@ const Home = () => {
     if (coordinates.length > 0) {
       var length = 0;
 
-
       do{
-
         firstCoordinate = coordinates[length];
-
         var markerIndex = markers.findIndex(marker => marker.key === String(firstCoordinate.car_park_no));
-
         length++;
-
-
         console.log('first marker not found, next', markerIndex)
 
       } while(markerIndex == -1);
@@ -377,13 +371,13 @@ const Home = () => {
       const newRegion = {
         latitude: x,
         longitude: y,
-        latitudeDelta: 0.1, // Adjust these values as needed
-        longitudeDelta: 0.1,
+        latitudeDelta: 0.02, // Adjust these values as needed
+        longitudeDelta: 0.02,
       };
       
-
-
       console.log(firstCoordinate.car_park_no,x,y)
+
+      setSearchedMarkedCarParkNo(firstCoordinate.car_park_no);
 
       if (markerIndex !== -1) 
       {
@@ -392,6 +386,7 @@ const Home = () => {
         setSearchMarkerColor('#03030F')
         console.log(newRegion)
         setSearchMarker(newRegion)
+        setRegion(newRegion)
       }
     };
 
@@ -470,7 +465,6 @@ const Home = () => {
                     onPress={() => handleSaveMarker(carpark)} 
                     style={{
                       ...styles.calloutButton, 
-                      zIndex: 3,
                       backgroundColor: 'blue',
                       padding: 10,
                       borderRadius: 5,
@@ -482,7 +476,6 @@ const Home = () => {
                     onPress={() => setShowSaveButton(false)} 
                     style={{
                       ...styles.calloutButton, 
-                      zIndex: 3,
                       backgroundColor: 'black',
                       padding: 10,
                       borderRadius: 5,
