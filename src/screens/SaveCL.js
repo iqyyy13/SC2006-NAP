@@ -22,6 +22,7 @@ const SaveCL = () =>{
     .then(function (response) {
       console.log(response)
       console.warn("Carpark Lot Saved")
+      navigation.navigate("CarparkLot")
     })
     .catch(function (error) {
       console.log(error);

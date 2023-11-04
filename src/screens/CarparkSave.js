@@ -18,6 +18,7 @@ const CarparkSave = () =>{
     .then(function (response) {
       console.log(response)
       console.warn("Carpark Saved")
+      navigation.navigate('CarparkUI')
     })
     .catch(function (error) {
       console.log(error);

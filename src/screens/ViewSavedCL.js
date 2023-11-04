@@ -39,29 +39,33 @@ const ViewSavedCL = () =>{
 
   const onDeletePressed = () => {
     console.warn("Delete");
+    showDeleteAlert();  
+  };
 
+  const confirmDeletion = () => {
     axios.post(`${BASE_URL}/carparklot/remove`, {
     })
     .then(function (response) {
       console.log(response)
-      showDeleteAlert();
-      //navigation.navigate('Home');
+      navigation.navigate('Home');
     })
     .catch(function (error) {
       console.log(error);
-    });    
-  };
+    });  
+  }
 
   const showDeleteAlert = () => {
     Alert.alert(
-      "Carpark Lot Record Deleted",
-      "The record has been successfully deleted.",
+      "Are you sure you want to delete this?",
+      "The saved carpark lot will be successfully deleted.",
       [
         {
-          text:"OK",
-          onPress: () => {
-            navigation.navigate('Home');
-          },
+          text:'OK',
+          onPress: () => confirmDeletion(),
+        },
+        {
+            text: 'Cancel',
+            onPress: () => navigation.navigate('ViewSavedCL'),
         },
       ],
       {cancelable : false}

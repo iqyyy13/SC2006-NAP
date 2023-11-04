@@ -11,8 +11,8 @@ const DeleteSavedCarpark = () =>{
    
   const onConfirmPressed = () => {
     console.warn("Confirm");
-    //showDeleteAlert();
-    confirmDeletion();
+    showDeleteAlert();
+    //confirmDeletion();
 
   };
 
@@ -40,6 +40,7 @@ const DeleteSavedCarpark = () =>{
   const showDeleteAlert = () => {
     Alert.alert(
       "Are you sure you want to delete this?",
+      "The saved carpark will be successfully deleted",
       [
         {
           text:'OK',
