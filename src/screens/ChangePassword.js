@@ -11,6 +11,7 @@ const ChangePassword = () =>{
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const { BASE_URL } = require('../../server/config.js')
+  const [isSecureEntry, setSecureEntry] = useState(true);
 
   const onConfirmPressed = () => {
     console.warn("Confirm Pressed");
@@ -65,12 +66,12 @@ const ChangePassword = () =>{
                     <Text style = {styles.inputLabel}> Enter new password </Text>
 
                     <TextInput
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        keyboardType= 'email-address'
-                        style = {styles.inputControl}
-                        value = {password1}
-                        onChangeText={newPassword1 => setPassword1(newPassword1)}
+                      secureTextEntry = {isSecureEntry}
+                      style = {styles.inputControl}
+                      placeholder = 'Password'
+                      placeholderTextColor = '#6b7280'
+                      value = {password1}
+                      onChangeText={newPassword1 => setPassword1(newPassword1)}
                     />
                 </View>
 
@@ -78,13 +79,21 @@ const ChangePassword = () =>{
                     <Text style = {styles.inputLabel}> Confirm new password </Text>
 
                     <TextInput
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        keyboardType= 'email-address'
-                        style = {styles.inputControl}
-                        value = {password2}
-                        onChangeText={newPassword2 => setPassword2(newPassword2)}
+                      secureTextEntry = {isSecureEntry}
+                      style = {styles.inputControl}
+                      placeholder = 'Password'
+                      placeholderTextColor = '#6b7280'
+                      value = {password2}
+                      onChangeText={newPassword2 => setPassword2(newPassword2)}
                     />
+
+                    <TouchableOpacity 
+                      onPress = {() => {
+                        setSecureEntry(!isSecureEntry) ;
+                      }}
+                    >
+                      <Text style = {styles.showText}> {isSecureEntry ? "Show password" : "Hide password"}</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View style ={styles.formAction}>
@@ -199,6 +208,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#1C1C1C',
+  },
+
+  showText: {
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    zIndex: -1
   },
 });
 

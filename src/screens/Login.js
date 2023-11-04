@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Alert, useWindowDimensions, Switch} from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, useWindowDimensions,TextInput} from "react-native";
 import Logo from '../../assets/naplogo.png';
 import { useNavigation } from "@react-navigation/native";
 import Checkbox from 'expo-checkbox';
@@ -11,6 +11,7 @@ const Login = () =>{
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [isSecureEntry, setSecureEntry] = useState(true);
   const { BASE_URL } = require('../../server/config.js')
    
   const onSignUpPressed = () => {
@@ -76,15 +77,24 @@ const Login = () =>{
 
           <View style = {styles.input}>
             <Text style = {styles.inputLabel}> Password </Text>
+            <View style = {styles.inputContainer}>
+              <TextInput
+                secureTextEntry = {isSecureEntry}
+                style = {styles.inputControl}
+                placeholder = 'Password'
+                placeholderTextColor = '#6b7280'
+                value = {password}
+                onChangeText={newpassword => setPassword(newpassword)}
+              />
 
-            <TextInput
-              secureTextEntry
-              style = {styles.inputControl}
-              placeholder = 'Password'
-              placeholderTextColor = '#6b7280'
-              value = {password}
-              onChangeText={newpassword => setPassword(newpassword)}
-            />
+              <TouchableOpacity 
+                onPress = {() => {
+                  setSecureEntry(!isSecureEntry) ;
+                }}
+              >
+                <Text style = {styles.showText}> {isSecureEntry ? "Show password" : "Hide password"}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style = {styles.checkboxContainer}>
@@ -97,7 +107,6 @@ const Login = () =>{
               <Text style = {styles.checkboxText}> Remember Me </Text>
           </View>
           
-
           <View style ={styles.formAction}>
             <TouchableOpacity 
               onPress={onSignInPressed}>
@@ -137,6 +146,20 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     flex: 1,
+    backgroundColor: "e8ecf4",
+  },
+
+  inputContainer: {
+    flexDirection: "column",
+    alignItems: "stretch",
+    justifyContent: "space-between"
+  },
+
+  showText: {
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    zIndex: -1
   },
 
   header: {
@@ -165,7 +188,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     color: '#222',
-    marginBottom: 10
+    marginBottom: 10,
   },
   inputControl: {
     backgroundColor: '#fff',

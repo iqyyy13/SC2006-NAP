@@ -10,7 +10,7 @@ const Registration = () =>{
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { BASE_URL } = require('../../server/config.js')
-
+  const [isSecureEntry, setSecureEntry] = useState(true);
   const onLogInPressed = () => {
     console.warn("Log In");
 
@@ -54,13 +54,21 @@ const Registration = () =>{
             <Text style = {styles.inputLabel}> Password </Text>
 
             <TextInput
-              secureTextEntry
+              secureTextEntry = {isSecureEntry}
               style = {styles.inputControl}
               placeholder = 'Password'
               placeholderTextColor = '#6b7280'
               value = {password}
               onChangeText={newpassword => setPassword(newpassword)}
             />
+
+            <TouchableOpacity 
+              onPress = {() => {
+                setSecureEntry(!isSecureEntry) ;
+              }}
+            >
+              <Text style = {styles.showText}> {isSecureEntry ? "Show password" : "Hide password"}</Text>
+            </TouchableOpacity>
           </View>
 
           <View style ={styles.formAction}>
@@ -202,7 +210,14 @@ const styles = StyleSheet.create({
   bottomtext:{
     fontSize: 18,
     fontWeight: '600',
-  }
+  },
+
+  showText: {
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    zIndex: -1
+  },
 });
 
 export default Registration;
