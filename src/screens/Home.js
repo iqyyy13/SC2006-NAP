@@ -28,14 +28,7 @@ const accessKey = '098ecd87-27d6-414e-adc6-e8e7f3e65207'; // Use the provided ac
 const { BASE_URL } = require('../../server/config.js')
 const Home = () => {
   
-  const[showSaveButton, setShowSaveButton] = useState(false);
-  const[selectedMarker, setSelectedMarker] = useState(null);
   const[searchedMarkerCarParkNo, setSearchedMarkedCarParkNo] = useState(null);
-
-  const handleMarkerPress = (carpark) => {
-    setSelectedMarker(carpark);
-    setShowSaveButton(true);
-  };
 
   const handleSaveMarker = () => {
     if(searchMarker) {
@@ -55,13 +48,6 @@ const Home = () => {
       });    
     }
   };
-
-  const [position, setPosition] = useState({
-    latitude: 10,
-    longitude: 10,
-    latitudeDelta: 0.001,
-    longitudeDelta: 0.001,
-  });
 
   const navigation = useNavigation();
   const [markers, setMarkers] = useState([]);
