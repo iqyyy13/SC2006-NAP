@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableWithoutFeedback, TouchableOpacity, Image, Animated, Modal } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Alert, TouchableOpacity, Image, Animated, Modal } from 'react-native';
 import MapView, {Marker, Circle, Callout } from 'react-native-maps';
 import axios from 'axios';
 import proj4 from 'proj4';
@@ -38,9 +38,21 @@ const Home = () => {
   };
 
   const handleSaveMarker = () => {
-    if(selectedMarker) {
+    if(searchMarker) {
 
       Alert.alert('Marker Saved');
+      console.warn(searchedMarkerCarParkNo)
+      axios.post(`${BASE_URL}/carpark/save`, {
+        carparkId : searchedMarkerCarParkNo,
+      })
+      .then(function (response) {
+        console.log(response)
+        console.warn("Carpark Saved")
+      })
+      .catch(function (error) {
+        console.log(error);
+        console.warn("wrong input")
+      });    
     }
   };
 
@@ -392,7 +404,25 @@ const Home = () => {
 
   const clickHandler = () => {
     console.warn("Button pressed")
-  }
+  };
+
+  const showSaveAlert = () => {
+    Alert.alert(
+      "Are you sure you want to save this carpark?",
+      "The saved carpark will be stored into your saved carpark lists",
+      [
+        {
+          text:'OK',
+          onPress: () => handleSaveMarker(searchMarker),
+        },
+        {
+            text: 'Cancel',
+            onPress: () => navigation.navigate('Home'),
+        },
+      ],
+      {cancelable : false}
+    );
+  };
 
   return (
     
@@ -455,34 +485,11 @@ const Home = () => {
               //style = {{ width: 5, height: 5 }}
               pinColor = 'green'
               coordinate = {searchMarker}
-              zIndex={2}            
+              zIndex={2}
             >
-              <Callout>
-                <Text> Do you want to save this marker? </Text>
-                <Text> Car Park No: {searchedMarkerCarParkNo} </Text>
+              <Callout tooltip onPress = {() => showSaveAlert()}>
                 <View style = {styles.calloutButtonsContainer}>
-                  <TouchableOpacity 
-                    onPress={() => handleSaveMarker(carpark)} 
-                    style={{
-                      ...styles.calloutButton, 
-                      backgroundColor: 'blue',
-                      padding: 10,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Text style = {{color : 'white'}}>Save</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                    onPress={() => setShowSaveButton(false)} 
-                    style={{
-                      ...styles.calloutButton, 
-                      backgroundColor: 'black',
-                      padding: 10,
-                      borderRadius: 5,
-                      }}
-                    >
-                    <Text style = {{color : 'white'}}>Cancel</Text>
-                  </TouchableOpacity>
+                  <Text style = {{color : 'black', alignItems: 'center'}}>Save</Text>
                 </View>
               </Callout>
             </Marker>
@@ -548,22 +555,18 @@ const styles = StyleSheet.create({
     height: 40,
   },
 
-  calloutButton: {
-    backgroundColor: '#FFFFFF', // Change the color to your preference
-    padding: 10,
-    marginTop: 5,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-
   mapContainer: {
     ...StyleSheet.absoluteFillObject,
     zIndex: -3,
   },
 
   calloutButtonsContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-around',
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    width: 150,
+    padding: 15,
+    borderWidth: 0.5,
+    alignSelf: 'flex-start'
   },
 
 });
