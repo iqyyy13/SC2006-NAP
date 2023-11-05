@@ -8,9 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import imageicon from '../../assets/adaptive-icon.png'
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon1 from "react-native-vector-icons/Fontisto";
+import {Location, Permissions} from 'expo';
 
-
-//import Geolocation from '@react-native-community/geolocation';
 
 proj4.defs([
   [
@@ -50,6 +49,7 @@ const Home = () => {
   };
 
   const navigation = useNavigation();
+  const [location, setLocation] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [carparkData, setCarparkData] = useState([]);
   const [carparkData2, setCarparkData2] = useState([]);
@@ -331,6 +331,8 @@ const Home = () => {
     }
     else{
       console.log('marker not found')
+      console.warn('error')
+      //carparkError()
     }
         
     // You can now use the coordinates array to update your map view or perform any other actions as needed.
@@ -407,6 +409,20 @@ const Home = () => {
         },
       ],
       {cancelable : false}
+    );
+  };
+
+  const carparkError = () => {
+    Alert.alert(
+      "No carparks near search location",
+      "Enter again",
+      [
+        {
+          text:'OK',
+          onPress: () => navigation.navigate('Home'),
+        },
+      ],
+      {cancelable: false}
     );
   };
 
@@ -489,7 +505,7 @@ const Home = () => {
 
             <Circle
               center = {searchMarker}
-              radius = {1000}
+              radius = {750}
               strokeColor='green'
               strokeWidth={5}
             />

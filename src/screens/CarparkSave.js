@@ -23,6 +23,7 @@ const CarparkSave = () =>{
     .catch(function (error) {
       console.log(error);
       console.warn("wrong input")
+      console.warn(error);
     });    
   }
 

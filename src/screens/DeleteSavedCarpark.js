@@ -27,7 +27,8 @@ const DeleteSavedCarpark = () =>{
     })
     .catch(function (error) {
       console.log(error);
-      console.warn("wrong input")
+      console.warn("no saved carpark record")
+      carparkError();
     });    
   }
 
@@ -52,6 +53,20 @@ const DeleteSavedCarpark = () =>{
         },
       ],
       {cancelable : false}
+    );
+  };
+
+  const carparkError = () => {
+    Alert.alert(
+      "No saved carpark found",
+      "Please enter a carpark",
+      [
+        {
+          text:'OK',
+          onPress: () => navigation.navigate('CarparkUI'),
+        },
+      ],
+      {cancelable: false}
     );
   };
 

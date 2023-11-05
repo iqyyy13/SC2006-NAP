@@ -51,6 +51,8 @@ const ViewSavedCL = () =>{
     })
     .catch(function (error) {
       console.log(error);
+      console.warn("No carpark lot record to be deleted");
+      carparkError();
     });  
   }
 
@@ -66,6 +68,20 @@ const ViewSavedCL = () =>{
         {
             text: 'Cancel',
             onPress: () => navigation.navigate('ViewSavedCL'),
+        },
+      ],
+      {cancelable : false}
+    );
+  };
+
+  const carparkError = () => {
+    Alert.alert(
+      "No carpark lot record found",
+      "Please save a carpark lot record",
+      [
+        {
+          text:'OK',
+          onPress: () => navigation.navigate('CarparkLot'),
         },
       ],
       {cancelable : false}
