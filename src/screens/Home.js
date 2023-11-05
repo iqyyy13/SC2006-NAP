@@ -8,7 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import imageicon from '../../assets/adaptive-icon.png'
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon1 from "react-native-vector-icons/Fontisto";
-import {Location, Permissions} from 'expo';
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
 
 
 proj4.defs([
@@ -54,15 +55,15 @@ const Home = () => {
   const [carparkData, setCarparkData] = useState([]);
   const [carparkData2, setCarparkData2] = useState([]);
   const [region, setRegion] = useState({
-    latitude: 1.3303110584045954, // Default latitude
-    longitude: 103.85885005071715, // Default longitude
+    latitude:  1.3461729156007916, // Default latitude
+    longitude: 103.68257366606377, // Default longitude
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
   });
 
   const[draggableMarkerCoord, setDraggableMarkerCoord] = useState({
-    longitude: 1.3303110584045954, 
-    latitude: 103.85885005071715,
+    latitude:  1.3461729156007916, // Default latitude
+    longitude: 103.68257366606377, // Default longitude
   });
 
   const [icon_1] = useState(new Animated.Value(40));
@@ -116,10 +117,22 @@ const Home = () => {
     setRegion({ ...region, latitude, longitude });
   };
 
+  const getLocationAsync = async() => {
+    const {status} = await Permissions.askAsync(Permissions.LOCATION);
+    if(status === 'granted'){
+      const currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+    }
+    else
+    {
+      console.log("permission denied");
+    }
+  };
+
   
   useEffect(() => {
 
-
+    getLocationAsync();
     const fetchCarparkData = async () => {
       try {
         const response = await axios.get(URA_API_URL, {
@@ -290,8 +303,8 @@ const Home = () => {
 
   const [searchText, setSearchText] = useState('');
   const [searchMarker, setSearchMarker] = useState({
-    latitude: 1.3303110584045954, // Default latitude
-    longitude: 103.85885005071715, // Default longitude
+    latitude:  1.3461729156007916, // Default latitude
+    longitude: 103.68257366606377, // Default longitude
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
   });
@@ -311,6 +324,7 @@ const Home = () => {
     if (coordinates == undefined){
       return null;
     }
+
     console.log(coordinates.coordinate);
 
     console.log('received coordinates: ', coordinates,'length:',coordinates.length);
@@ -331,7 +345,6 @@ const Home = () => {
     }
     else{
       console.log('marker not found')
-      console.warn('error')
       //carparkError()
     }
         
@@ -355,6 +368,8 @@ const Home = () => {
     else{
       console.log("else");
       firstCoordinate = coordinates;
+      console.warn("Error")
+      carparkError();
     }
     var x,y;
       console.log(firstCoordinate.y_coor,firstCoordinate.x_coor)

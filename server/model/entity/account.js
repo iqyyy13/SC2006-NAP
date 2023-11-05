@@ -7,7 +7,6 @@ const Account = db.define("Account", {
     password: DataTypes.STRING,
     email: DataTypes.STRING,
     verificationCode: DataTypes.STRING,
-    newPassword: DataTypes.STRING
 }, {tableName: "account"})
 
 module.exports = { Account }

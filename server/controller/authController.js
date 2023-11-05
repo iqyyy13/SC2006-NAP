@@ -22,10 +22,10 @@ const login = async (req, res) => {
     }
 }
 
-const requestNewPassword = async (req, res) => {
+const sendVerificationEmail = async (req, res) => {
     try {
-        const { username, email, newPassword } = req.body
-        const result = await authService.requestNewPassword(username, email, newPassword, req)
+        const { email } = req.body
+        const result = await authService.sendVerificationEmail(email, req)
         res.status(200).json(result)
     } catch (error) {
         console.error('Error', error.message)
@@ -33,10 +33,10 @@ const requestNewPassword = async (req, res) => {
     }
 }
 
-const verifyPasswordRequestAndUpdate = async (req, res) => {
+const verifyRequestAndUpdate = async (req, res) => {
     try {
-        const { verificationCode } = req.body
-        const result = await authService.verifyPasswordRequestAndUpdate(verificationCode, req)
+        const { verificationCode, newPassword } = req.body
+        const result = await authService.verifyRequestAndUpdate(verificationCode, newPassword, req)
         res.status(200).json(result)
     } catch (error) {
         console.error('Error', error.message)
@@ -54,4 +54,4 @@ const logout = async (req, res) => {
     }
 }
 
-module.exports = { signup, login, requestNewPassword, verifyPasswordRequestAndUpdate, logout }
+module.exports = { signup, login, sendVerificationEmail, verifyRequestAndUpdate, logout }

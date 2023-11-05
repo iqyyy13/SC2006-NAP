@@ -13,26 +13,10 @@ const transporter = nodemailer.createTransport({
     },
 })
 
-// helper function to send email
-const sendEmail = async (email, verificationCode) => {
-    try {
-        const mailOptions = {
-            from: 'projectNap123@gmail.com',
-            to: email,
-            subject: "NAP verification code to change password",
-            text: `Your verification code is ${verificationCode}`
-        }
-        await transporter.sendMail(mailOptions)
-    } catch (error) {
-        throw new SendEmailError()
-    }
-}
-
 function generateRandomVerificationCode() {
-    /*const min = 100000; // Smallest 6-digit number
+    const min = 100000; // Smallest 6-digit number
     const max = 999999; // Largest 6-digit number
-    return Math.floor(Math.random() * (max-min+1)) + min;*/
-    return "000000";
+    return Math.floor(Math.random() * (max-min+1)) + min;
 }
 
 const validateSignupInput = (username, password, email) => {
@@ -93,33 +77,44 @@ const checkUserExists = async (username) => {
     return User
 }
 
-const requestNewPassword = async (username, email, newPassword, req) => {
-    const validationError = validateSignupInput(username, newPassword, email)
-    if (validationError) throw new ValidationError(validationError)
-    const User = await Account.findOne({ where: { username, email } })
+// helper function to send email
+const sendVerificationEmail = async (email, req) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0.9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(email)) return 'Invalid email'
+    const User = await Account.findOne({ where: { email } })
     if (!User) throw new UserNotFoundError()
-
-    // Generate and store random code to account table, send to email
     const verificationCode = generateRandomVerificationCode()
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10)
-    req.session.userID = User.id 
-    await User.update({ verificationCode, newPassword: hashedNewPassword })
-    try { 
-        await sendEmail(email, verificationCode)
+    try {
+        const mailOptions = {
+            from: 'projectNap123@gmail.com',
+            to: email,
+            subject: "NAP verification code to change password",
+            text: `Your verification code is ${verificationCode}`
+        }
+        await transporter.sendMail(mailOptions)
+        await User.update({ verificationCode })
+        req.session.userID = User.id // Store id in session
     } catch (error) {
-        throw error
+        throw new SendEmailError()
     }
     return { Message: `Verification code sent to ${email}` }
 }
 
-const verifyPasswordRequestAndUpdate = async (verificationCode, req) => {
+const verifyRequestAndUpdate = async (verificationCode, newPassword, req) => {
+    if (!newPassword) throw new ValidationError('Empty Password')
+    if (newPassword.length < 8) throw new ValidationError('Password length < 8')
+    if (!/[A-Z]/.test(newPassword)) throw new ValidationError('Password does not contain an uppercase letter')
+    if (!/\d/.test(newPassword)) throw new ValidationError('Password does not contain a number')
+
     const accountId = req.session.userID
     if (!accountId) throw new SessionTimeoutError()
     const User = await Account.findOne({ where: { id: accountId } })
     if (!User) throw new UserNotFoundError()
 
     if (User.verificationCode != verificationCode) throw new VerificationError()
-    await User.update({ password: User.newPassword, newPassword: "", verificationCode: "" })
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+    await User.update({ password: hashedNewPassword, verificationCode: "" })
     req.session.userID = User.id // Store id in session
     return{ id: User.id, username: User.username }
 }
@@ -134,4 +129,4 @@ const logout = async (req) => {
     }
 }
 
-module.exports = { signup, login, logout, requestNewPassword, verifyPasswordRequestAndUpdate }
+module.exports = { signup, login, logout, sendVerificationEmail, verifyRequestAndUpdate }

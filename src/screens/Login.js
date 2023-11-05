@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, useWindowDimensions,TextInput} from "react-native";
+import { SafeAreaView, View, Text, StyleSheet, Image, TouchableOpacity, useWindowDimensions,TextInput, Alert} from "react-native";
 import Logo from '../../assets/naplogo.png';
 import { useNavigation } from "@react-navigation/native";
 import Checkbox from 'expo-checkbox';
@@ -33,7 +33,40 @@ const Login = () =>{
     })
     .catch(function (error) {
       console.log(error);
-      console.warn("wrong input")
+      console.warn("Invalid Input")
+
+      if(error.response)
+      {
+        //console.warn("Error status code: " + error.response.status);
+
+        if(error.response.status === 400) {
+          console.warn("Validation input error")
+          Alert.alert(
+            "Validation Input Error",
+            "Please verify your email address and/or password",
+            [
+              {
+                text:'OK',
+                onPress: () => navigation.navigate('Login'),
+              },
+            ],
+            {cancelable : false}
+          );
+        } else if(error.response.status === 404) {
+          console.warn("User not found")
+          Alert.alert(
+            "Account not found in database",
+            "Please register an account",
+            [
+              {
+                text:'OK',
+                onPress: () => navigation.navigate('Registration'),
+              },
+            ],
+            {cancelable : false}
+          );
+        }
+      }
     });    
   }
 

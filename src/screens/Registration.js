@@ -92,7 +92,10 @@ const Registration = () =>{
                   ]);
                 })
                 .catch(function (error) {
-                  console.log(error);
+                  console.warn(error.message);
+                  console.warn("error");
+                  console.warn(error);
+                  console.warn(error.code);
                 });
 
                 /*Alert.alert('Successfully registered an account!', '', [

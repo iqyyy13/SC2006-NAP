@@ -16,15 +16,36 @@ const ChangePassword = () =>{
   const onConfirmPressed = () => {
     console.warn("Confirm Pressed");
 
-    axios.post(`${BASE_URL}/auth/verifyPasswordRequestAndUpdate`, {
-      verificationCode : code
+    axios.post(`${BASE_URL}/auth/verifyRequestAndUpdate`, {
+      verificationCode : code,
+      newPassword : password1,
     })
     .then(function (response) {
       console.log(response)
+      console.warn("Password changed")
       navigation.navigate("Login");
     })
     .catch(function (error) {
       console.log(error);
+
+      if(error.response)
+      {
+        //console.warn("Error status code: " + error.response.status);
+
+        if(error.response.status === 400) {
+          Alert.alert(
+            "Email Verification Code Error",
+            "Please enter a valid verification code",
+            [
+              {
+                text:'OK',
+                onPress: () => navigation.navigate('ChangePassword'),
+              },
+            ],
+            {cancelable : false}
+          );
+        } 
+      }
     });    
   }
 

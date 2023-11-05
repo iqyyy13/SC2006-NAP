@@ -14,17 +14,29 @@ const ForgotPassword = () =>{
   const onSendPressed = () => {
     console.warn("Send Pressed");
 
-    axios.post(`${BASE_URL}/auth/sendEmail`, {
-      username: email,
-      email: email,
-      newPassword: null
+    axios.post(`${BASE_URL}/auth/sendVerificationEmail`, {
+      email: email
     })
     .then(function (response) {
       console.log(response)
+      console.warn("Email Sent");
       navigation.navigate('ChangePassword');
     })
     .catch(function (error) {
       console.log(error);
+      if(error.response.status === 404) {
+        Alert.alert(
+          "Email Address not in database",
+          "Please enter a valid email or register if you haven't",
+          [
+            {
+              text:'OK',
+              onPress: () => navigation.navigate('ForgotPassword'),
+            },
+          ],
+          {cancelable : false}
+        );
+      }       
     });    
   }
 
