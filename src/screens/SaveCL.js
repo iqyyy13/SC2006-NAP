@@ -27,6 +27,39 @@ const SaveCL = () =>{
     .catch(function (error) {
       console.log(error);
       console.warn("wrong input")
+
+      if(error.response)
+      {
+        //console.warn("Error status code: " + error.response.status);
+
+        if(error.response.status === 400) {
+          console.warn("Carpark Lot cannot be blank")
+          Alert.alert(
+            "Carpark Lot is blank",
+            "Please enter the parking lot that you have parked at",
+            [
+              {
+                text:'OK',
+                onPress: () => navigation.navigate('SaveCL'),
+              },
+            ],
+            {cancelable : false}
+          );
+        } else if(error.response.status === 404) {
+          console.warn("Carpark Does Not Exist")
+          Alert.alert(
+            "Carpark Id does not exist",
+            "Please enter a valid Carpark Id",
+            [
+              {
+                text:'OK',
+                onPress: () => navigation.navigate('SaveCL'),
+              },
+            ],
+            {cancelable : false}
+          );
+        }
+      }
     });    
   }
 

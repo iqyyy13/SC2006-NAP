@@ -18,12 +18,53 @@ const CarparkSave = () =>{
     .then(function (response) {
       console.log(response)
       console.warn("Carpark Saved")
-      navigation.navigate('CarparkUI')
+      Alert.alert(
+        "Carpark Saved",
+        "Your carpark Id has been saved",
+        [
+          {
+            text:'OK',
+            onPress: () => navigation.navigate('CarparkUI'),
+          },
+        ],
+        {cancelable : false}
+      );
     })
     .catch(function (error) {
       console.log(error);
       console.warn("wrong input")
       console.warn(error);
+
+      if(error.response)
+      {
+        //console.warn("Error status code: " + error.response.status);
+
+        if(error.response.status === 404) {
+          Alert.alert(
+            "Carpark Not Found",
+            "Please enter a valid Carpark Id",
+            [
+              {
+                text:'OK',
+                onPress: () => navigation.navigate('CarparkSave'),
+              },
+            ],
+            {cancelable : false}
+          );
+        } else if(error.response.status === 400) {
+          Alert.alert(
+            "Carpark Id has already been saved",
+            "Please enter another Carpark Id",
+            [
+              {
+                text:'OK',
+                onPress: () => navigation.navigate('CarparkUI'),
+              },
+            ],
+            {cancelable : false}
+          );
+        }
+      }
     });    
   }
 

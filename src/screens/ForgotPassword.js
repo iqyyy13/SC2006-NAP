@@ -20,7 +20,17 @@ const ForgotPassword = () =>{
     .then(function (response) {
       console.log(response)
       console.warn("Email Sent");
-      navigation.navigate('ChangePassword');
+      Alert.alert(
+        "Please check your email account",
+        "A verification code of 6 digits has been emailed to your account",
+        [
+          {
+            text:'OK',
+            onPress: () => navigation.navigate('ChangePassword'),
+          },
+        ],
+        {cancelable : false}
+      );
     })
     .catch(function (error) {
       console.log(error);

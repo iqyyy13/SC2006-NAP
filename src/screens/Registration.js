@@ -93,9 +93,52 @@ const Registration = () =>{
                 })
                 .catch(function (error) {
                   console.warn(error.message);
-                  console.warn("error");
-                  console.warn(error);
-                  console.warn(error.code);
+
+                  if(error.response)
+                  {
+                    //console.warn("Error status code: " + error.response.status);
+
+                    if(error.response.status === 400) {
+                      console.warn("Validation input error")
+                      Alert.alert(
+                        "Verify your email address and/or password",
+                        "Password > 8 characters, contain an uppercase letter and a number",
+                        [
+                          {
+                            text:'OK',
+                            onPress: () => navigation.navigate('Registration'),
+                          },
+                        ],
+                        {cancelable : false}
+                      );
+                    } else if(error.response.status === 404) {
+                      console.warn("User not found")
+                      Alert.alert(
+                        "Account not found in database",
+                        "Please register an account",
+                        [
+                          {
+                            text:'OK',
+                            onPress: () => navigation.navigate('Registration'),
+                          },
+                        ],
+                        {cancelable : false}
+                      );
+                    } else if(error.response.status === 409) {
+                      console.warn("User already in database")
+                      Alert.alert(
+                        "Account has already been registered with this email address",
+                        "Please login again",
+                        [
+                          {
+                            text:'OK',
+                            onPress: () => navigation.navigate('Login'),
+                          },
+                        ],
+                        {cancelable : false}
+                      );
+                    }
+                  }
                 });
 
                 /*Alert.alert('Successfully registered an account!', '', [
