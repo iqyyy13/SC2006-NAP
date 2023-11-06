@@ -55,15 +55,15 @@ const Home = () => {
   const [carparkData, setCarparkData] = useState([]);
   const [carparkData2, setCarparkData2] = useState([]);
   const [region, setRegion] = useState({
-    latitude:  1.3461729156007916, // Default latitude
-    longitude: 103.68257366606377, // Default longitude
+    latitude:  1.3306040606944056, // Default latitude
+    longitude: 103.85899789206418, // Default longitude  
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
   });
 
   const[draggableMarkerCoord, setDraggableMarkerCoord] = useState({
-    latitude:  1.3461729156007916, // Default latitude
-    longitude: 103.68257366606377, // Default longitude
+    latitude:  1.3306040606944056, // Default latitude
+    longitude: 103.85899789206418, // Default longitude 
   });
 
   const [icon_1] = useState(new Animated.Value(40));
@@ -207,29 +207,28 @@ const Home = () => {
     
 
     
-    for(i=0;i<carparkData2.length;i++){
-      data.map(carpark => {
-          if (carpark.car_park_no == carparkData2[i].carpark_number)
-            {
-              
-              
-              //console.log("matched",carpark.car_park_no,carpark.x_coor,carpark.y_coor,carparkData2[i].carpark_info[0].lots_available,"/",carparkData2[i].carpark_info[0].total_lots,carpark.x_coor,carpark.y_coor,j)
-              if (markers.findIndex(marker => marker.key === carpark.car_park_no) === -1) {
-                const floatxcoor = parseFloat(carpark.x_coor)
-                const floatycoor = parseFloat(carpark.y_coor)
-                markers.push(
-                <Marker
-                  key={carpark.car_park_no}
-                  coordinate={{
-                    latitude : floatxcoor,
-                    longitude : floatycoor,}}
-                    title={carpark.car_park_no}
-                    description={carparkData2[i].carpark_info[0].lots_available}
-                />)
-              } 
-            }
-        })
-    }
+  for(i=0;i<carparkData2.length;i++){
+    data.map(carpark => {
+        if (carpark.car_park_no == carparkData2[i].carpark_number)
+          {
+            //console.log("matched",carpark.car_park_no,carpark.x_coor,carpark.y_coor,carparkData2[i].carpark_info[0].lots_available,"/",carparkData2[i].carpark_info[0].total_lots,carpark.x_coor,carpark.y_coor,j)
+            if (markers.findIndex(marker => marker.key === carpark.car_park_no) === -1) {
+              const floatxcoor = parseFloat(carpark.x_coor)
+              const floatycoor = parseFloat(carpark.y_coor)
+              markers.push(
+              <Marker
+                key={carpark.car_park_no}
+                coordinate={{
+                  latitude : floatxcoor,
+                  longitude : floatycoor,}}
+                  title={carpark.address}
+                  description = {'lots available: ' + carparkData2[i].carpark_info[0].lots_available + ', carpark no: ' + carpark.car_park_no}
+
+              />)
+            } 
+          }
+      })
+  }
   
 
 
@@ -303,8 +302,8 @@ const Home = () => {
 
   const [searchText, setSearchText] = useState('');
   const [searchMarker, setSearchMarker] = useState({
-    latitude:  1.3461729156007916, // Default latitude
-    longitude: 103.68257366606377, // Default longitude
+    latitude:  1.3306040606944056, // Default latitude
+    longitude: 103.85899789206418, // Default longitude 
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
   });
